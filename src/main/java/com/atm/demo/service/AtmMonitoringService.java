@@ -2,13 +2,17 @@ package com.atm.demo.service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.atm.demo.model.AtmBranchs;
 import com.atm.demo.model.Failure;
 import com.atm.demo.model.Transaction;
+import com.atm.demo.repository.AtmBranchsRepository;
 import com.atm.demo.repository.FailureRepository;
 import com.atm.demo.repository.TransactionRepository;
 
@@ -104,6 +108,60 @@ public class AtmMonitoringService {
 
         return endSeconds - startSeconds;
     }
+    
+    public Map<String, String> getAtmOperationalHours() {
+        // Sample data for demonstration
+        Map<String, String> operationalHours = new HashMap<>();
+        operationalHours.put("Weekdays", "08:00 AM - 08:00 PM");
+        operationalHours.put("Weekends", "10:00 AM - 06:00 PM");
+        operationalHours.put("Holidays", "Closed");
+        return operationalHours;
+    }
+
+    
+    @Autowired
+    private AtmBranchsRepository atmBranchsRepository;
+
+    public List<AtmBranchs> getAtmLocations() {
+        // Fetching locations from the database
+        return atmBranchsRepository.findAll();
+    }
+    
+    public Map<String, String> getAtmStatus(String atmId) {
+        // Simulating ATM status based on ATM ID
+        Map<String, Map<String, String>> atmStatusData = new HashMap<>();
+
+        atmStatusData.put("ATM001", Map.of(
+            "atmId", "ATM001",
+            "status", "Operational"
+        ));
+
+        atmStatusData.put("ATM002", Map.of(
+            "atmId", "ATM002",
+            "status", "Out of Service"
+        ));
+
+        atmStatusData.put("ATM003", Map.of(
+            "atmId", "ATM003",
+            "status", "Operational"
+        ));
+
+        atmStatusData.put("ATM004", Map.of(
+            "atmId", "ATM004",
+            "status", "Under Maintenance"
+        ));
+
+        // Check if the requested ATM ID exists and return its status
+        Map<String, String> atmStatus = atmStatusData.get(atmId);
+
+        if (atmStatus != null) {
+            return atmStatus;
+        } else {
+            return Map.of("message", "ATM ID not found");
+        }
+    }
+
+
 
 
 }

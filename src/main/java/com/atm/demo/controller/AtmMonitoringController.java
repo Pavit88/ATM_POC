@@ -1,6 +1,7 @@
 package com.atm.demo.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.atm.demo.model.AtmBranchs;
 import com.atm.demo.model.Failure;
 import com.atm.demo.model.Transaction;
 import com.atm.demo.service.AtmMonitoringService;
@@ -67,4 +69,22 @@ public class AtmMonitoringController {
             return ResponseEntity.internalServerError().body("Error processing video: " + e.getMessage());
         }
     }
+    
+    
+    @GetMapping("/operational-hours")
+    public Map<String, String> getAtmOperationalHours() {
+        return atmMonitoringService.getAtmOperationalHours();
+    }
+    
+    @GetMapping("/locations")
+    public ResponseEntity<List<AtmBranchs>> getAtmLocations() {
+        return ResponseEntity.ok(atmMonitoringService.getAtmLocations());
+    }
+
+    
+    @GetMapping("/atm-status")
+    public ResponseEntity<Map<String, String>> getAtmStatus(@RequestParam String atmId) {
+        return ResponseEntity.ok(atmMonitoringService.getAtmStatus(atmId));
+    }
+
 }
